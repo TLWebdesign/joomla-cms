@@ -142,7 +142,13 @@ class FieldModel extends AdminModel
                 }
             } elseif (
                 $field->params['searchindex'] != $data['params']['searchindex']
-                || ($data['params']['searchindex'] > 0 && ($field->state != $data['state'] || $field->access != $data['access']))
+                || (
+                    $data['params']['searchindex'] > 0
+                    && (
+                        $field->state != ($data['state'] ?? $field->state)
+                        || $field->access != ($data['access'] ?? $field->access)
+                    )
+                )
             ) {
                 Factory::getApplication()->enqueueMessage(Text::_('COM_FIELDS_SEARCHINDEX_MIGHT_REQUIRE_REINDEXING'), 'notice');
             }
