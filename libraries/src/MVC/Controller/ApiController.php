@@ -491,6 +491,17 @@ class ApiController extends BaseController
             throw new \RuntimeException(Text::_('JLIB_APPLICATION_ERROR_FORM_CREATE'));
         }
 
+        // A form request never contains disabled fields, and Form::validate() rejects them.
+        // Leave out the disabled fields that were only added from the stored record above;
+        // the model keeps their stored value.
+        foreach (array_keys($storedValues) as $fieldName) {
+            $field = $form->getField($fieldName);
+
+            if ($field && $field->disabled) {
+                unset($data[$fieldName]);
+            }
+        }
+
         // Test whether the data is valid.
         $validData = $model->validate($form, $data);
 
