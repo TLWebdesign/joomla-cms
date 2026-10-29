@@ -76,6 +76,10 @@ class ItemsController extends ApiController
             $this->modelState->set('filter.menutype', $filter->clean($apiFilterInfo['menutype'], 'STRING'));
         }
 
+        if (\array_key_exists('state', $apiFilterInfo)) {
+            $this->modelState->set('filter.published', $filter->clean($apiFilterInfo['state'], 'INT'));
+        }
+
         $this->modelState->set('filter.client_id', $this->getClientIdFromInput());
 
         return parent::displayList();

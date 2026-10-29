@@ -13,6 +13,18 @@ describe('Test that menu items site API endpoint', () => {
       .then((response) => cy.api_responseContains(response, 'title', 'automated test site menu item'));
   });
 
+  it('can deliver a list of trashed site menu items', () => {
+    cy.db_createMenuItem({ title: 'automated test site menu item', published: -2 })
+      .then(() => cy.api_get('/menus/site/items?filter[state]=-2'))
+      .then((response) => cy.api_responseContains(response, 'title', 'automated test site menu item'));
+  });
+
+  it('can deliver a list of unpublished site menu items', () => {
+    cy.db_createMenuItem({ title: 'automated test site menu item', published: 0 })
+      .then(() => cy.api_get('/menus/site/items?filter[state]=0'))
+      .then((response) => cy.api_responseContains(response, 'title', 'automated test site menu item'));
+  });
+
   it('can deliver a single site menu item', () => {
     cy.db_createMenuItem({ title: 'automated test site menu item' })
       .then((id) => cy.api_get(`/menus/site/items/${id}`))

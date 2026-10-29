@@ -13,6 +13,18 @@ describe('Test that menu items administrator API endpoint', () => {
       .then((response) => cy.api_responseContains(response, 'title', 'automated test administrator menu item'));
   });
 
+  it('can deliver a list of trashed administrator menu items', () => {
+    cy.db_createMenuItem({ title: 'automated test administrator menu item', published: -2, client_id: 1 })
+      .then(() => cy.api_get('/menus/administrator/items?filter[state]=-2'))
+      .then((response) => cy.api_responseContains(response, 'title', 'automated test administrator menu item'));
+  });
+
+  it('can deliver a list of unpublished administrator menu items', () => {
+    cy.db_createMenuItem({ title: 'automated test administrator menu item', published: 0, client_id: 1 })
+      .then(() => cy.api_get('/menus/administrator/items?filter[state]=0'))
+      .then((response) => cy.api_responseContains(response, 'title', 'automated test administrator menu item'));
+  });
+
   it('can deliver a single administrator menu item', () => {
     cy.db_createMenuItem({ title: 'automated test administrator menu item', client_id: 1 })
       .then((id) => cy.api_get(`/menus/administrator/items/${id}`))
